@@ -1,9 +1,10 @@
 # Author: Steven Tohme
 # Class: CP468 - Artificial Intelligence
 
+from collections import defaultdict
 class City:
     """
-    a class to represent a city instance
+    class to represent a city instance
 
     ----------
     Attributes:
@@ -20,6 +21,22 @@ class City:
         self.description = description
         self.latitude = latitude
         self.longitude = longitude
+
+
+class Graph:
+    """
+    class to represent a graph
+    ----------
+    Attributes:
+    ----------
+    graph (dict): A dictionary containing the graph in the form {City: [City1, City2, ...]}
+    """
+    def __init__(self):
+        self.graph = defaultdict(list)
+    
+    def addEdge(self, city, neighbour):
+        self.graph[city].append(neighbour)
+    
 
 
 
