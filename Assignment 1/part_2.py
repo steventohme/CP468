@@ -15,12 +15,32 @@ class City:
     latitude (float): The latitude of the city
     longitude (float): The longitude of the city
 
+    ----------
+    Methods:
+    ----------
+    calcDistance(city: City) -> float: Calculates the Euclidian distance between the current city and the city passed as a parameter
+
     """
     def __init__(self, name: str, description: str, latitude: float, longitude: float):
         self.name = name
         self.description = description
         self.latitude = latitude
         self.longitude = longitude
+    
+
+    def calcDistance(self, city: 'City') -> float:
+        """
+        Calculates the Euclidian distance between the current city and the city passed as a parameter
+
+        Parameters:
+        ----------
+        city (City): The city to calculate the distance to
+
+        Returns:
+        ----------
+        distance (float): The distance between the two cities
+        """
+        return ((self.latitude - city.latitude)**2 + (self.longitude - city.longitude)**2)**0.5
  
 
 class Graph:
