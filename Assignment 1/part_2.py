@@ -60,6 +60,12 @@ class Graph:
     Attributes:
     ----------
         graph (dict): A dictionary containing the graph in the form {City: [City1, City2, ...]}
+    
+    ----------
+    Methods:
+    ----------
+        addEdge(city: City, neighbour: City) -> None: Adds an edge between two cities
+        createGraph(city_file: str) -> Graph: Creates a graph from a file containing cities
     """
     def __init__(self) -> None:
         self.graph = defaultdict(list)
