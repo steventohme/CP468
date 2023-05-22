@@ -21,7 +21,7 @@ class City:
         calcDistance(city: City) -> float: Calculates the Euclidian distance between the current city and the city passed as a parameter
 
     """
-    def __init__(self, name: str, description: str, latitude: float, longitude: float):
+    def __init__(self, name: str, description: str, latitude: float, longitude: float) -> None:
         """
         Constructs city object
 
@@ -61,12 +61,30 @@ class Graph:
     ----------
         graph (dict): A dictionary containing the graph in the form {City: [City1, City2, ...]}
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.graph = defaultdict(list)
     
-    def addEdge(self, city: City, neighbour: City):
+    def addEdge(self, city: City, neighbour: City) -> None:
         self.graph[city].append(neighbour)
     
+    def createGraph(self, city_file: str) -> 'Graph':
+        """
+        Creates a graph from a file containing cities
+
+        Parameters:
+        ----------
+            city_file (string): The name of the file containing the cities
+
+        Returns:
+        ----------
+            graph (Graph): The graph created from the file
+        """
+        with open(city_file) as f:
+            for line in f:
+                line = line.split(',')
+                city = City(line[0], line[1], float(line[2]), float(line[3]))
+                self.graph[city] = []
+        return self
 
 
 
