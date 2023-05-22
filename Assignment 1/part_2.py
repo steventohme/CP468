@@ -89,7 +89,7 @@ class Graph:
             for line in f:
                 line = line.split(',')
                 city = City(line[0], line[1], float(line[2]), float(line[3]))
-                self.graph[city] = []
+                self.addEdge(city, [])
         return self
 
 
