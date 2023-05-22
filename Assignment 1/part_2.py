@@ -2,6 +2,7 @@
 # Class: CP468 - Artificial Intelligence
 
 from collections import defaultdict
+
 class City:
     """
     class to represent a city instance
@@ -15,13 +16,12 @@ class City:
     longitude (float): The longitude of the city
 
     """
-    # Constructor
-    def __init__(self, name, description, latitude, longitude):
+    def __init__(self, name: str, description: str, latitude: float, longitude: float):
         self.name = name
         self.description = description
         self.latitude = latitude
         self.longitude = longitude
-
+ 
 
 class Graph:
     """
@@ -34,7 +34,7 @@ class Graph:
     def __init__(self):
         self.graph = defaultdict(list)
     
-    def addEdge(self, city, neighbour):
+    def addEdge(self, city: City, neighbour: City):
         self.graph[city].append(neighbour)
     
 
