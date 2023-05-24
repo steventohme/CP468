@@ -100,11 +100,11 @@ class Graph:
         ----------
             graph (Graph): The graph created from the file
         """
-        with open(city_file) as f:
-            for line in f:
-                line = line.split(',')
-                city = City(line[0], line[1], float(line[2]), float(line[3]))
-                self.addEdge(city, [])
+        self.createCityList(city_file)
+        for city in self.cityList:
+            for neighbour in self.cityList:
+                if city.calcDistance(neighbour) <= 500:
+                    self.addEdge(city, neighbour)
         return self
 
 
