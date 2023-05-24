@@ -136,5 +136,32 @@ class Graph:
                     new_path.append(adjacent)
                     queue.append(new_path)
                 visited.add(node)
-        return None
+        return visited
 
+    def DFS(self, start: City, goal: City) -> list:
+        """
+        Performs a depth first search on the graph
+
+        Parameters:
+        ----------
+            start (City): The starting city
+            goal (City): The goal city
+
+        Returns:
+        ----------
+            path (list): The path from the start city to the goal city
+        """
+        stack = [[start]]
+        visited = set()
+        while stack:
+            path = stack.pop()
+            node = path[-1]
+            if node == goal:
+                return path
+            elif node not in visited:
+                for adjacent in self.graph.get(node, []):
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    stack.append(new_path)
+                visited.add(node)
+        return visited
