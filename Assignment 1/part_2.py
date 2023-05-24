@@ -69,7 +69,22 @@ class Graph:
     """
     def __init__(self) -> None:
         self.graph = defaultdict(list)
+        self.cityList = []
     
+    def createCityList(self, cityFile: str) -> None:
+        """
+        Creates a list of cities to be referenced by the graph
+
+        Parameters:
+        ----------
+            cityFile (string): The name of the file containing the cities
+        """
+        with open(cityFile) as f:
+            for line in f:
+                line = line.split(',')
+                city = City(line[0], line[1], float(line[2]), float(line[3]))
+                self.cityList.append(city)
+
     def addEdge(self, city: City, neighbour: City) -> None:
         self.graph[city].append(neighbour)
     
