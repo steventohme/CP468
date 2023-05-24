@@ -79,6 +79,7 @@ class Graph:
         ----------
             cityFile (string): The name of the file containing the cities
         """
+        self.cityList = []
         with open(cityFile) as f:
             for line in f:
                 line = line.split(',')
@@ -88,7 +89,7 @@ class Graph:
     def addEdge(self, city: City, neighbour: City) -> None:
         self.graph[city].append(neighbour)
     
-    def createGraph(self, city_file: str) -> 'Graph':
+    def createGraph(self, cityFile: str) -> 'Graph':
         """
         Creates a graph from a file containing cities
 
@@ -100,13 +101,9 @@ class Graph:
         ----------
             graph (Graph): The graph created from the file
         """
-        self.createCityList(city_file)
+        self.createCityList(cityFile)
         for city in self.cityList:
             for neighbour in self.cityList:
                 if city.calcDistance(neighbour) <= 500:
                     self.addEdge(city, neighbour)
         return self
-
-
-
-    
