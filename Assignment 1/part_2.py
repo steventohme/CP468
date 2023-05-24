@@ -109,3 +109,32 @@ class Graph:
                 if city.calcDistance(neighbour) <= 500:
                     self.addEdge(city, neighbour)
         return self
+
+    def BFS(self, start: City, goal: City) -> list:
+        """
+        Performs a breadth first search on the graph
+
+        Parameters:
+        ----------
+            start (City): The starting city
+            goal (City): The goal city
+
+        Returns:
+        ----------
+            path (list): The path from the start city to the goal city
+        """
+        queue = [[start]]
+        visited = set()
+        while queue:
+            path = queue.pop(0)
+            node = path[-1]
+            if node == goal:
+                return path
+            elif node not in visited:
+                for adjacent in self.graph.get(node, []):
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    queue.append(new_path)
+                visited.add(node)
+        return None
+
