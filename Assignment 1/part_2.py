@@ -83,6 +83,8 @@ class Graph:
         with open(cityFile) as f:
             for line in f:
                 line = line.split(',')
+                if line[0] == 'name':
+                    continue
                 city = City(line[0], line[1], float(line[2]), float(line[3]))
                 self.cityList.append(city)
 
