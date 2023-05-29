@@ -195,6 +195,8 @@ class Graph:
         while queue:
             current, current_path = queue.pop()
             if len(current_path) == num_nodes:
+                # If all cities except the start city have been visited,
+                # calculate the distance and update the minimum distance and shortest path if necessary
                 distance = self.calcPathDistance(current_path) + current.calcDistance(start_node)
                 if distance < min_distance:
                     min_distance = distance
@@ -202,6 +204,7 @@ class Graph:
                 continue
 
             for neighbour in self.graph[current]:
+                # Add the neighbours of the current city to the queue if they have not been visited
                 if neighbour not in visited:
                     queue.append((neighbour, current_path + [neighbour]))
                     visited.add(neighbour)
