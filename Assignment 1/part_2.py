@@ -135,6 +135,14 @@ class Graph:
                     self.addEdge(city, neighbour)
         return self
 
+    def sortNeighbours(self) -> dict:
+        """
+        Sorts the neighbours of each city in the graph by their distance to the city
+        """
+        for city in self.graph:
+            self.graph[city].sort(key=lambda x: city.calcDistance(x))
+        return self.graph
+
     def calcPathDistance(self, path: list) -> float:
         """
         Calculates the total distance of a path
@@ -173,6 +181,7 @@ class Graph:
         visited.add(start_node)
         min_distance = float('inf')
         shortest_path = []
+        self.graph = self.sortNeighbours()
 
         while not queue.empty():
             current, current_path = queue.get()
