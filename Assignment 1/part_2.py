@@ -177,13 +177,19 @@ class Graph:
             min_distance (float): The length of the shortest Hamiltonian cycle
             path (List[City]): The order in which the cities were visited
         """
+        # initialize variables for BFS
         num_nodes = len(self.cityList)
         queue = deque()
         visited = set()
-        queue.append((start_node, [start_node]))  # (node, current_path)
-        visited.add(start_node)
         min_distance = float('inf')
         shortest_path = []
+
+        # keep track of the current_node as well as the path
+        queue.append((start_node, [start_node]))
+        visited.add(start_node)
+
+
+        # sort neighbours by distance from each city
         self.graph = self.sortNeighbours()
 
         while queue:
