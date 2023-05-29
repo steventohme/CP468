@@ -225,14 +225,15 @@ class Graph:
             min_distance (float): The length of the shortest path
             path (List[City]): The order in which the cities were visited
         """
-        num_nodes = len(self.cityList)  # Total number of nodes in the graph
-        stack = [(start_node, [start_node])]  # Stack to store nodes to be explored
-        visited = set()  # Set to track visited nodes
-        min_distance = float('inf')  # Variable to store the minimum distance found
-        shortest_path = []  # Variable to store the shortest path found
+        num_nodes = len(self.cityList)  
+        stack = [(start_node, [start_node])] 
+        visited = set()  
+        min_distance = float('inf')  
+        shortest_path = [] 
 
         stack.append((start_node, [start_node]))
         visited.add(start_node)
+        
         # Sort neighbours by distance from each city
         self.graph = self.sortNeighbours()
 
