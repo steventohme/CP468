@@ -194,8 +194,8 @@ class Graph:
 
         while queue:
             current, current_path = queue.pop()
-            if len(current_path) == num_nodes - 1:
-                distance = self.calcPathDistance(current_path)
+            if len(current_path) == num_nodes:
+                distance = self.calcPathDistance(current_path) + current.calcDistance(start_node)
                 if distance < min_distance:
                     min_distance = distance
                     shortest_path = current_path + [start_node]
