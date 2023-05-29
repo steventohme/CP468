@@ -152,39 +152,6 @@ class Graph:
             distance += path[i].calcDistance(path[i+1])
         return distance
 
-# TODO: This is the shortest amount of nodes we need it to be the shortest distance
-    def BFS(self, start: City, goal: City) -> list:
-        """
-        Performs a breadth first search on the graph
-
-        Parameters:
-        ----------
-            start (City): The starting city
-            goal (City): The goal city
-
-        Returns:
-        ----------
-            path (list): The path from the start city to the goal city
-        """
-        queue = deque()
-        queue.append([start])
-        visited = set()
-
-        while queue:
-            # Sort the queue based on total distance
-            queue = deque(sorted(queue, key=lambda x: self.calcPathDistance(x)))
-
-            path = queue.popleft()
-            node = path[-1]
-            if node == goal:
-                return path
-            elif node not in visited:
-                for adjacent in self.graph[node]:
-                    new_path = list(path)
-                    new_path.append(adjacent)
-                    queue.append(new_path)
-                visited.add(node)
-        return path
     
     def BFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
         """
