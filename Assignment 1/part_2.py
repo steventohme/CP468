@@ -138,6 +138,10 @@ class Graph:
     def sortNeighbours(self) -> dict:
         """
         Sorts the neighbours of each city in the graph by their distance to the city
+
+        Returns:
+        ----------
+            graph (dict): The graph with the neighbours sorted
         """
         for city in self.graph:
             self.graph[city].sort(key=lambda x: city.calcDistance(x))
