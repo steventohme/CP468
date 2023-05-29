@@ -225,6 +225,37 @@ class Graph:
             min_distance (float): The length of the shortest path
             path (List[City]): The order in which the cities were visited
         """
+        num_nodes = len(self.cityList)  # Total number of nodes in the graph
+        stack = [(start_node, [start_node])]  # Stack to store nodes to be explored
+        visited = set()  # Set to track visited nodes
+        min_distance = float('inf')  # Variable to store the minimum distance found
+        shortest_path = []  # Variable to store the shortest path found
+
+        stack.append((start_node, [start_node]))
+        visited.add(start_node)
+        # Sort neighbours by distance from each city
+        self.graph = self.sortNeighbours()
+
+        while stack:
+            current, current_path = stack.pop()
+            if len(current_path) == num_nodes:
+                # If all cities have been visited,
+                # calculate the distance and update the minimum distance and shortest path if necessary
+                distance = self.calcPathDistance(current_path) + current.calcDistance(start_node)
+                if distance < min_distance:
+                    min_distance = distance
+                    shortest_path = current_path + [start_node]
+                continue
+
+            for neighbour in self.graph[current]:
+                # Add the neighbours of the current city to the stack if they have not been visited
+                if neighbour not in visited:
+                    stack.append((neighbour, current_path + [neighbour]))
+                    visited.add(neighbour)
+                    break
+
+        return min_distance, shortest_path
+        
 
     def printPath(self, path: list) -> None:
         """
@@ -244,10 +275,13 @@ class Graph:
 def main():
     graph = Graph().createGraph('Assignment 1/city_data_50.csv')
     start = graph.cityList[0]
-    print("Shortest Hamiltonian Cycle")
+    print("Shortest Path using BFS")
     distance, path = graph.BFS_TSP(start)
     graph.printPath(path)
-    print("\n")
+    print(f"Distance: {distance}")
+    print("Shortest Path using DFS Cycle")
+    distance, path = graph.DFS_TSP(start)
+    graph.printPath(path)
     print(f"Distance: {distance}")
 
 main()
