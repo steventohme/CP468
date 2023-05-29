@@ -150,7 +150,7 @@ class Graph:
         distance = 0
         for i in range(len(path) - 1):
             distance += path[i].calcDistance(path[i+1])
-        return distance
+        return round(distance, 2)
 
     
     def BFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
