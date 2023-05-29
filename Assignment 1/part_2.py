@@ -74,7 +74,7 @@ class City:
         ----------
             distance (float): The distance between the two cities
         """
-        return ((self.latitude - city.latitude)**2 + (self.longitude - city.longitude)**2)**0.5
+        return round(((self.latitude - city.latitude)**2 + (self.longitude - city.longitude)**2)**0.5, 2)
  
 
 class Graph:
