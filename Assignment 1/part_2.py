@@ -199,15 +199,18 @@ class Graph:
         ----------
             path (list): The path to print
         """
-        for city in path:
-            print(f"{city.description}" + " -> ", end="")
+        for i,city in enumerate(path):
+            if i == len(path) - 1:
+                print(f"{city.description}")
+            else:
+                print(f"{city.description}" + " -> ", end="")
 
 
 def main():
     graph = Graph().createGraph('Assignment 1/city_data_50.csv')
     start = graph.cityList[0]
     print("Shortest Hamiltonian Cycle")
-    distance, path = graph.shortest_hamiltonian_cycle(start)
+    distance, path = graph.BFS_TSP(start)
     graph.printPath(path)
     print("\n")
     print(f"Distance: {distance}")
