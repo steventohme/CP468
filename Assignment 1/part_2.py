@@ -166,7 +166,7 @@ class Graph:
     
     def BFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
         """
-        Finds the shortest Hamiltonian cycle using breadth-first search
+        Finds the shortest path that visits all cities using BFS
 
         Parameters:
         ----------
@@ -174,7 +174,7 @@ class Graph:
 
         Returns:
         ----------
-            min_distance (float): The length of the shortest Hamiltonian cycle
+            min_distance (float): The length of the shortest path
             path (List[City]): The order in which the cities were visited
         """
         # initialize variables for BFS
@@ -211,6 +211,20 @@ class Graph:
                     break
 
         return min_distance, shortest_path
+
+    def DFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
+        """
+        Finds the shortest path that visits all cities using DFS
+
+        Parameters:
+        ----------
+            start_node (City): The starting city for the search
+        
+        Returns:
+        ----------
+            min_distance (float): The length of the shortest path
+            path (List[City]): The order in which the cities were visited
+        """
 
     def printPath(self, path: list) -> None:
         """
