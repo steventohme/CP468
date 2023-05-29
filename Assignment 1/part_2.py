@@ -1,8 +1,7 @@
 # Author: Steven Tohme
 # Class: CP468 - Artificial Intelligence
 
-from collections import defaultdict
-from queue import Queue
+from collections import defaultdict, deque
 
 class City:
     """
@@ -179,16 +178,16 @@ class Graph:
             path (List[City]): The order in which the cities were visited
         """
         num_nodes = len(self.cityList)
-        queue = Queue()
+        queue = deque()
         visited = set()
-        queue.put((start_node, [start_node]))  # (node, current_path)
+        queue.append((start_node, [start_node]))  # (node, current_path)
         visited.add(start_node)
         min_distance = float('inf')
         shortest_path = []
         self.graph = self.sortNeighbours()
 
-        while not queue.empty():
-            current, current_path = queue.get()
+        while queue:
+            current, current_path = queue.pop()
             if len(current_path) == num_nodes - 1:
                 distance = self.calcPathDistance(current_path)
                 if distance < min_distance:
@@ -198,7 +197,7 @@ class Graph:
 
             for neighbour in self.graph[current]:
                 if neighbour not in visited:
-                    queue.put((neighbour, current_path + [neighbour]))
+                    queue.append((neighbour, current_path + [neighbour]))
                     visited.add(neighbour)
                     break
 
