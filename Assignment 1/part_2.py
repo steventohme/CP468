@@ -2,6 +2,7 @@
 # Class: CP468 - Artificial Intelligence
 
 from collections import defaultdict
+from queue import Queue
 
 class City:
     """
@@ -36,6 +37,30 @@ class City:
         self.description = description
         self.latitude = latitude
         self.longitude = longitude
+    
+    def __hash__(self):
+        """
+        Hashes the city object
+
+        Returns:
+        ----------
+            hash (int): The hash of the city object
+        """
+        return hash((self.name, self.description))
+
+    def __eq__(self, other):
+        """
+        Checks if two city objects are equal
+
+        Parameters:
+        ----------
+            other (City): The city to compare to
+        
+        Returns:
+        ----------
+            bool: True if the cities are equal, False otherwise
+        """
+        return (self.name, self.description) == (other.name, other.description)
     
 
     def calcDistance(self, city: 'City') -> float:
@@ -110,6 +135,24 @@ class Graph:
                     self.addEdge(city, neighbour)
         return self
 
+    def calcPathDistance(self, path: list) -> float:
+        """
+        Calculates the total distance of a path
+
+        Parameters:
+        ----------
+            path (list): The path to calculate the distance of
+
+        Returns:
+        ----------
+            distance (float): The total distance of the path
+        """
+        distance = 0
+        for i in range(len(path) - 1):
+            distance += path[i].calcDistance(path[i+1])
+        return distance
+
+# TODO: This is the shortest amount of nodes we need it to be the shortest distance
     def BFS(self, start: City, goal: City) -> list:
         """
         Performs a breadth first search on the graph
@@ -123,45 +166,83 @@ class Graph:
         ----------
             path (list): The path from the start city to the goal city
         """
-        queue = [[start]]
+        queue = deque()
+        queue.append([start])
         visited = set()
+
         while queue:
-            path = queue.pop(0)
+            # Sort the queue based on total distance
+            queue = deque(sorted(queue, key=lambda x: self.calcPathDistance(x)))
+
+            path = queue.popleft()
             node = path[-1]
             if node == goal:
                 return path
             elif node not in visited:
-                for adjacent in self.graph.get(node, []):
+                for adjacent in self.graph[node]:
                     new_path = list(path)
                     new_path.append(adjacent)
                     queue.append(new_path)
                 visited.add(node)
-        return visited
-
-    def DFS(self, start: City, goal: City) -> list:
+        return path
+    
+    def BFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
         """
-        Performs a depth first search on the graph
+        Finds the shortest Hamiltonian cycle using breadth-first search
 
         Parameters:
         ----------
-            start (City): The starting city
-            goal (City): The goal city
+            start_node (City): The starting city for the search
 
         Returns:
         ----------
-            path (list): The path from the start city to the goal city
+            min_distance (float): The length of the shortest Hamiltonian cycle
+            path (List[City]): The order in which the cities were visited
         """
-        stack = [[start]]
+        num_nodes = len(self.cityList)
+        queue = Queue()
         visited = set()
-        while stack:
-            path = stack.pop()
-            node = path[-1]
-            if node == goal:
-                return path
-            elif node not in visited:
-                for adjacent in self.graph.get(node, []):
-                    new_path = list(path)
-                    new_path.append(adjacent)
-                    stack.append(new_path)
-                visited.add(node)
-        return visited
+        queue.put((start_node, [start_node]))  # (node, current_path)
+        visited.add(start_node)
+        min_distance = float('inf')
+        shortest_path = []
+
+        while not queue.empty():
+            current, current_path = queue.get()
+            if len(current_path) == num_nodes - 1:
+                distance = self.calcPathDistance(current_path)
+                if distance < min_distance:
+                    min_distance = distance
+                    shortest_path = current_path + [start_node]
+                continue
+
+            for neighbour in self.graph[current]:
+                if neighbour not in visited:
+                    queue.put((neighbour, current_path + [neighbour]))
+                    visited.add(neighbour)
+                    break
+
+        return min_distance, shortest_path
+
+    def printPath(self, path: list) -> None:
+        """
+        Prints the path in the form of a list of cities
+
+        Parameters:
+        ----------
+            path (list): The path to print
+        """
+        for city in path:
+            print(f"{city.description}" + " -> ", end="")
+
+
+def main():
+    graph = Graph().createGraph('Assignment 1/city_data_50.csv')
+    start = graph.cityList[0]
+    print("Shortest Hamiltonian Cycle")
+    distance, path = graph.shortest_hamiltonian_cycle(start)
+    graph.printPath(path)
+    print("\n")
+    print(f"Distance: {distance}")
+
+main()
