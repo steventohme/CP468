@@ -113,6 +113,14 @@ class Graph:
                 self.cityList.append(city)
 
     def addEdge(self, city: City, neighbour: City) -> None:
+        """
+        Adds an edge between two cities
+
+        Parameters:
+        ----------
+            city (City): The city to add the edge to
+            neighbour (City): The city to add as a neighbour
+        """
         self.graph[city].append(neighbour)
     
     def createGraph(self, cityFile: str) -> 'Graph':
