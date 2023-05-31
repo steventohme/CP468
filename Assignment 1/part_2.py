@@ -171,100 +171,76 @@ class Graph:
             distance += path[i].calcDistance(path[i+1])
         return round(distance, 2)
 
-    
-    def BFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
+    def BFS(self, start_node: City, end_node: City) -> tuple[list[City], float]:
         """
-        Finds the shortest path that visits all cities using BFS
+        Performs a breadth first search on the graph
 
         Parameters:
         ----------
-            start_node (City): The starting city for the search
+            start_node (City): The starting city
+            end_node (City): The goal city
 
         Returns:
         ----------
-            min_distance (float): The length of the shortest path
-            path (List[City]): The order in which the cities were visited
+            path (list): The path from the start city to the goal city
         """
-        # initialize variables for BFS
-        num_nodes = len(self.cityList)
+
+        # initialize FIFO queue and visited set
         queue = deque()
         visited = set()
-        min_distance = float('inf')
-        shortest_path = []
 
-        # keep track of the current_node as well as the path
-        queue.append((start_node, [start_node]))
+        # add start node to queue and visited set
+        queue.append((start_node,[start_node]))
         visited.add(start_node)
 
-
-        # sort neighbours by distance from each city
-        self.graph = self.sortNeighbours()
-
+        # while the queue is not empty i.e. there are still nodes to visit
         while queue:
-            current, current_path = queue.pop()
-            if len(current_path) == num_nodes:
-                # If all cities except the start city have been visited,
-                # calculate the distance and update the minimum distance and shortest path if necessary
-                distance = self.calcPathDistance(current_path) + current.calcDistance(start_node)
-                if distance < min_distance:
-                    min_distance = distance
-                    shortest_path = current_path + [start_node]
-                continue
-
-            for neighbour in self.graph[current]:
-                # Add the neighbours of the current city to the queue if they have not been visited
+            current_city, current_path = queue.pop()
+            if current_city == end_node:
+                return current_path, self.calcPathDistance(current_path)
+            
+            # add all neighbours of the current node to the queue and visited set
+            for neighbour in self.graph[current_city]:
                 if neighbour not in visited:
-                    queue.append((neighbour, current_path + [neighbour]))
                     visited.add(neighbour)
-                    break
-
-        return min_distance, shortest_path
-
-    def DFS_TSP(self, start_node: City) -> tuple[float, list[City]]:
+                    queue.append((neighbour, current_path + [neighbour]))
+        
+        return None, None
+    
+    def DFS(self, start_node: City, end_node:City):
         """
-        Finds the shortest path that visits all cities using DFS
+        Performs a depth first search on the graph
 
         Parameters:
         ----------
-            start_node (City): The starting city for the search
-        
+            start_node (City): The starting city
+            end_node (City): The goal city
+
         Returns:
         ----------
-            min_distance (float): The length of the shortest path
-            path (List[City]): The order in which the cities were visited
+            path (list): The path from the start city to the goal city
         """
-        num_nodes = len(self.cityList)  
-        stack = [(start_node, [start_node])] 
-        visited = set()  
-        min_distance = float('inf')  
-        shortest_path = [] 
+        # initialize stack and visited set
+        stack = []
+        visited = set()
 
-        stack.append((start_node, [start_node]))
+        # add start node to stack and visited set
+        stack.append((start_node,[start_node]))
         visited.add(start_node)
-        
-        # Sort neighbours by distance from each city
-        self.graph = self.sortNeighbours()
 
+        # while the stack is not empty i.e. there are still nodes to visit
         while stack:
-            current, current_path = stack.pop()
-            if len(current_path) == num_nodes:
-                # If all cities have been visited,
-                # calculate the distance and update the minimum distance and shortest path if necessary
-                distance = self.calcPathDistance(current_path) + current.calcDistance(start_node)
-                if distance < min_distance:
-                    min_distance = distance
-                    shortest_path = current_path + [start_node]
-                continue
-
-            for neighbour in self.graph[current]:
-                # Add the neighbours of the current city to the stack if they have not been visited
+            current_city, current_path = stack.pop()
+            if current_city == end_node:
+                return current_path, self.calcPathDistance(current_path)
+            
+            # add all neighbours of the current node to the stack and visited set
+            for neighbour in self.graph[current_city]:
                 if neighbour not in visited:
-                    stack.append((neighbour, current_path + [neighbour]))
                     visited.add(neighbour)
-                    break
-
-        return min_distance, shortest_path
+                    stack.append((neighbour, current_path + [neighbour]))
         
+        return None, None
 
     def printPath(self, path: list) -> None:
         """
@@ -285,11 +261,11 @@ def main():
     graph = Graph().createGraph('Assignment 1/city_data_50.csv')
     start = graph.cityList[0]
     print("Shortest Path using BFS")
-    distance, path = graph.BFS_TSP(start)
+    path, distance = graph.BFS(start, graph.cityList[3])
     graph.printPath(path)
     print(f"Distance: {distance}")
     print("Shortest Path using DFS Cycle")
-    distance, path = graph.DFS_TSP(start)
+    path, distance = graph.DFS(start, graph.cityList[3])
     graph.printPath(path)
     print(f"Distance: {distance}")
 
