@@ -142,18 +142,6 @@ class Graph:
                     self.addEdge(city, neighbour)
         return self
 
-    def sortNeighbours(self) -> dict:
-        """
-        Sorts the neighbours of each city in the graph by their distance to the city
-
-        Returns:
-        ----------
-            graph (dict): The graph with the neighbours sorted
-        """
-        for city in self.graph:
-            self.graph[city].sort(key=lambda x: city.calcDistance(x))
-        return self.graph
-
     def calcPathDistance(self, path: list) -> float:
         """
         Calculates the total distance of a path
@@ -255,3 +243,11 @@ class Graph:
                 print(f"{city.description}")
             else:
                 print(f"{city.description}" + " -> ", end="")
+
+
+# In this assignment, we were tasked to implement the BFS and DFS algorithms to find the shortest path between two cities in a graph.
+# However, DFS and BFS are not algorithms built to find the shortest path in a weighted graph. For cases like this, we would use
+# Dijkstra's algorithm or some other search algorithm designed for weighted graphs. Looking at it in the context of the data, we can
+# tell that the shortest path between any two cities is the path that connects the two cities directly. This would be the case using
+# BFS or DFS and Dijkstra's algorithm only because of the context of the data, wherein the path with the least number of edges is always
+# the shortest in weight as well.
