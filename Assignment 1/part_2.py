@@ -255,18 +255,3 @@ class Graph:
                 print(f"{city.description}")
             else:
                 print(f"{city.description}" + " -> ", end="")
-
-
-def main():
-    graph = Graph().createGraph('Assignment 1/city_data_50.csv')
-    start = graph.cityList[0]
-    print("Shortest Path using BFS")
-    path, distance = graph.BFS(start, graph.cityList[3])
-    graph.printPath(path)
-    print(f"Distance: {distance}")
-    print("Shortest Path using DFS Cycle")
-    path, distance = graph.DFS(start, graph.cityList[3])
-    graph.printPath(path)
-    print(f"Distance: {distance}")
-
-main()
