@@ -12,7 +12,7 @@ class Board:
             N (int): The size of the board
         """
         self.N = N
-        self.board = [[0 for i in range(N)] for j in range(N)]
+        self.board = [[1 for i in range(N)] for j in range(N)]
 
     def __str__(self) -> str:
         """
@@ -24,7 +24,12 @@ class Board:
         """
         string = ""
         for row in self.board:
-            string += str(row) + "\n"
+            for cell in row:
+                if cell == 1:
+                    string += "♛ "
+                else:
+                    string += str(cell) + " "
+            string += "\n"
         return string
 
 
