@@ -51,7 +51,22 @@ class Board:
             string += "\n"
         return string
     
-    # TODO: implement -> def createDiagonals(self) -> list[list[int]]:
+    def createDiagonals(self) -> list[list[int]]:
+        """
+        Creates a list of all the diagonals on the board
+
+        Returns:
+        ----------
+            diagonals (list[list[int]]): A list of all the diagonals on the board
+        """
+        # every diagonal has a unique sum of row + col, so we can use that as an index
+        diagonals = [[] for _ in range(self.N*2 - 1)]
+
+        for i in range(self.N):
+            for j in range(self.N):
+                diagonals[i + j].append(self.board[i][j])
+        
+        return diagonals
 
     def fitness(self) -> int:
         """
