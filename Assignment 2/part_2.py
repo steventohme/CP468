@@ -16,7 +16,7 @@ class Board:
         ----------
             N (int): The size of the board
             board (list[list[int]]): The board itself, a 2D array of integers
-            diagonals (list[list[int]]): A list of all the diagonals on the board, precomputed instead of created every fitness function call
+            diagonals (list[list[int]]): A list of all the diagonals on the board,precomputed instead of created every fitness function call
         """
         self.N = N
         self.board = [[0 for _ in range(N)] for _ in range(N)]
@@ -81,3 +81,9 @@ class Board:
         horizontalCollisions = sum(1 for row in self.board if row.count(1) > 1)
         diagonalCollisions = len([diagonal for diagonal in self.diagonals if diagonal.count(1) > 1])
         return int(maxFitness - (horizontalCollisions + diagonalCollisions))
+
+
+if __name__ == "__main__":
+    POPULATION_SIZE = 100
+    N = 8
+    population = [Board(N, True) for _ in range(POPULATION_SIZE)]
