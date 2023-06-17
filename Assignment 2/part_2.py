@@ -44,9 +44,9 @@ class Board:
         ----------
             fitness (int): The fitness of the board
         """
-        horizontal_collisions = 0
-        diagonal_collisions = 0
         maxFitness = (self.N * (self.N - 1)/2)
+        horizontal_collisions = sum(1 for row in self.board if row.count(1) > 1)
+        diagonal_collisions = 0
 
         return int(maxFitness - (horizontal_collisions + diagonal_collisions))
 
