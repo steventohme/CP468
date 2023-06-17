@@ -85,5 +85,8 @@ class Board:
 
 if __name__ == "__main__":
     POPULATION_SIZE = 100
-    N = 8
+    N = int(input("Enter the size of the board: "))
+    if N < 4:
+        print("The board must be at least size 4")
+        exit()
     population = [Board(N, True) for _ in range(POPULATION_SIZE)]
