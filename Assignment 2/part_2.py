@@ -11,6 +11,12 @@ class Board:
         ----------
             N (int): The size of the board
             chromosome (bool): Whether or not to generate a random board (chromosome) vs. an empty board
+        
+        Attributes:
+        ----------
+            N (int): The size of the board
+            board (list[list[int]]): The board itself, a 2D array of integers
+            diagonals (list[list[int]]): A list of all the diagonals on the board, precomputed instead of created every fitness function call
         """
         self.N = N
         self.board = [[0 for _ in range(N)] for _ in range(N)]
@@ -20,6 +26,8 @@ class Board:
             queenPlacement = [random.randint(0, N - 1) for _ in range(N)]
             for i in range(N):
                 self.board[queenPlacement[i]][i] = 1
+        
+        self.diagonals = self.createDiagonals()
             
 
     def __str__(self) -> str:
@@ -43,6 +51,8 @@ class Board:
             string += "\n"
         return string
     
+    # TODO: implement -> def createDiagonals(self) -> list[list[int]]:
+
     def fitness(self) -> int:
         """
         Returns the fitness of the board
@@ -54,8 +64,5 @@ class Board:
         """
         maxFitness = (self.N * (self.N - 1)/2)
         horizontalCollisions = sum(1 for row in self.board if row.count(1) > 1)
-
-        diagonalCollisions = 0
-                
-
+        diagonalCollisions = len([diagonal for diagonal in self.diagonals if diagonal.count(1) > 1])
         return int(maxFitness - (horizontalCollisions + diagonalCollisions))
