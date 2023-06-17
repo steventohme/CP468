@@ -34,3 +34,23 @@ class Board:
                     string += "⬜"
             string += "\n"
         return string
+    
+    def fitness(self) -> int:
+        """
+        Returns the fitness of the board
+        fitness = (N * (N-1)/2) - collisions
+    
+        Returns:
+        ----------
+            fitness (int): The fitness of the board
+        """
+        horizontal_collisions = 0
+        diagonal_collisions = 0
+        maxFitness = (self.N * (self.N - 1)/2)
+
+        return int(maxFitness - (horizontal_collisions + diagonal_collisions))
+
+
+        
+
+
