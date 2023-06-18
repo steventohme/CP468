@@ -2,6 +2,8 @@
 # Class: CP468 - Artificial Intelligence
 
 import random
+from math import comb
+
 class Board:
     def __init__(self, N: int, chromosome: bool) -> None:
         """
@@ -27,7 +29,7 @@ class Board:
             for i in range(N):
                 self.board[queenPlacement[i]][i] = 1
         
-        self.diagonals = self.createDiagonals()
+        self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
             
 
     def __str__(self) -> str:
@@ -60,13 +62,20 @@ class Board:
             diagonals (list[list[int]]): A list of all the diagonals on the board
         """
         # every diagonal has a unique sum of row + col, so we can use that as an index
-        diagonals = [[] for _ in range(self.N*2 - 1)]
-
-        for i in range(self.N):
-            for j in range(self.N):
-                diagonals[i + j].append(self.board[i][j])
         
-        return diagonals
+        leftDiagonals = [[] for _ in range(N * 2 - 1)]
+        rightDiagonals = [[] for _ in range(N * 2 - 1)]
+
+        for i in range(N):
+            for j in range(N):
+                leftDiagonals[i + j].append(self.board[i][N - 1 - j])
+
+
+        for i in range(N):
+            for j in range(N):
+                rightDiagonals[i + j].append(self.board[i][j])
+    
+        return leftDiagonals, rightDiagonals
     
     def fitness(self) -> int:
         """
@@ -78,9 +87,11 @@ class Board:
             fitness (int): The fitness of the board
         """
         maxFitness = (self.N * (self.N - 1)/2)
-        horizontalCollisions = sum(row.count(1) // 2 for row in self.board)
-        diagonalCollisions = sum(diagonal.count(1) // 2 for diagonal in self.diagonals)
-        return int(maxFitness - (horizontalCollisions + diagonalCollisions))
+
+        # we must use the comb function to figure out how many pairs of queens are colliding
+        horizontalCollisions = sum(comb(row.count(1),2) for row in self.board)
+        diagonalCollisions = sum(comb(diagonal.count(1),2) for diagonal in self.rightDiagonals) + sum(comb(diagonal.count(1),2) for diagonal in self.leftDiagonals)
+        return int(maxFitness - (horizontalCollisions + diagonalCollisions)), horizontalCollisions, diagonalCollisions
 
 
 if __name__ == "__main__":
