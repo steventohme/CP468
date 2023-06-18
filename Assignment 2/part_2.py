@@ -18,7 +18,8 @@ class Board:
         ----------
             N (int): The size of the board
             board (list[list[int]]): The board itself, a 2D array of integers
-            diagonals (list[list[int]]): A list of all the diagonals on the board,precomputed instead of created every fitness function call
+            leftDiagonals (list[list[int]]): A list of all the diagonals on the board, going from top left to bottom right
+            rightDiagonals (list[list[int]]): A list of all the diagonals on the board, going from top right to bottom left
         """
         self.N = N
         self.board = [[0 for _ in range(N)] for _ in range(N)]
