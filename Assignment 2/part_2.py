@@ -67,7 +67,7 @@ class Board:
                 diagonals[i + j].append(self.board[i][j])
         
         return diagonals
-
+    
     def fitness(self) -> int:
         """
         Returns the fitness of the board
@@ -78,8 +78,8 @@ class Board:
             fitness (int): The fitness of the board
         """
         maxFitness = (self.N * (self.N - 1)/2)
-        horizontalCollisions = sum(1 for row in self.board if row.count(1) > 1)
-        diagonalCollisions = len([diagonal for diagonal in self.diagonals if diagonal.count(1) > 1])
+        horizontalCollisions = sum(row.count(1) // 2 for row in self.board)
+        diagonalCollisions = sum(diagonal.count(1) // 2 for diagonal in self.diagonals)
         return int(maxFitness - (horizontalCollisions + diagonalCollisions))
 
 
@@ -90,3 +90,5 @@ if __name__ == "__main__":
         print("The size of the board must be greater than 3")
         N = int(input("Enter the size of the board (must be greater than 3): "))
     population = [Board(N, True) for _ in range(POPULATION_SIZE)]
+    print(population[0])
+    print(population[0].fitness())
