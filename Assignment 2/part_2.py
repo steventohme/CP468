@@ -24,13 +24,11 @@ class Board:
         """
         self.N = N
         self.queenPlacement = [0 for _ in range(N)]
-        self.board = [[0 for _ in range(N)] for _ in range(N)]
         if chromosome:
             # this will ensure that there are no collisions vetically, 
             # therefore no need to check for vertical collisions
             self.queenPlacement = [random.randint(0, N - 1) for _ in range(N)]
-            for i in range(N):
-                self.board[self.queenPlacement[i]][i] = 1
+        self.board = self.createBoard()
         self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
             
 
@@ -54,6 +52,19 @@ class Board:
                     string += "⬜"
             string += "\n"
         return string
+    
+    def createBoard(self) -> list[list[int]]:
+        """
+        Creates a board based off of the queenPlacement list
+
+        Returns:
+        ----------
+            board (list[list[int]]): The board itself, a 2D array of integers
+        """
+        board = [[0 for _ in range(self.N)] for _ in range(self.N)]
+        for i in range(self.N):
+            board[self.queenPlacement[i]][i] = 1
+        return board
     
     def createDiagonals(self) -> list[list[int]]:
         """
@@ -94,6 +105,7 @@ class Board:
         horizontalCollisions = sum(comb(row.count(1),2) for row in self.board)
         diagonalCollisions = sum(comb(diagonal.count(1),2) for diagonal in self.rightDiagonals) + sum(comb(diagonal.count(1),2) for diagonal in self.leftDiagonals)
         return int(maxFitness - (horizontalCollisions + diagonalCollisions)), horizontalCollisions, diagonalCollisions
+
 
 
 if __name__ == "__main__":
