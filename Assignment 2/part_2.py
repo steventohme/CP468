@@ -107,13 +107,14 @@ class Board:
         return int(maxFitness - (horizontalCollisions + diagonalCollisions)), horizontalCollisions, diagonalCollisions
 
 
-    def crossOver(self, other: 'Board') -> 'Board':
+    def crossOver(self, other: 'Board', alpha: float) -> 'Board':
         """
         Performs a cross over between two boards
 
         Parameters:
         ----------
             other (Board): The other board to cross over with
+            alpha (float): The crossover rate
 
         Returns:
         ----------
@@ -121,7 +122,7 @@ class Board:
         """
         child = Board(self.N, False)
         for i in range(self.N):
-            if random() < 0.5:
+            if random() < alpha:
                 child.queenPlacement[i] = self.queenPlacement[i]
             else:
                 child.queenPlacement[i] = other.queenPlacement[i]
