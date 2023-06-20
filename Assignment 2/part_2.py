@@ -1,7 +1,7 @@
 # Author: Steven Tohme
 # Class: CP468 - Artificial Intelligence
 
-import random
+from random import randint, random
 from math import comb
 
 class Board:
@@ -27,7 +27,7 @@ class Board:
         if chromosome:
             # this will ensure that there are no collisions vetically, 
             # therefore no need to check for vertical collisions
-            self.queenPlacement = [random.randint(0, N - 1) for _ in range(N)]
+            self.queenPlacement = [randint(0, N - 1) for _ in range(N)]
         self.board = self.createBoard()
         self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
             
@@ -106,6 +106,29 @@ class Board:
         diagonalCollisions = sum(comb(diagonal.count(1),2) for diagonal in self.rightDiagonals) + sum(comb(diagonal.count(1),2) for diagonal in self.leftDiagonals)
         return int(maxFitness - (horizontalCollisions + diagonalCollisions)), horizontalCollisions, diagonalCollisions
 
+
+    def crossOver(self, other: 'Board') -> 'Board':
+        """
+        Performs a cross over between two boards
+
+        Parameters:
+        ----------
+            other (Board): The other board to cross over with
+
+        Returns:
+        ----------
+            child (Board): The child board
+        """
+        child = Board(self.N, False)
+        for i in range(self.N):
+            if random() < 0.5:
+                child.queenPlacement[i] = self.queenPlacement[i]
+            else:
+                child.queenPlacement[i] = other.queenPlacement[i]
+        
+        child.board = child.createBoard()
+        child.leftDiagonals, child.rightDiagonals = child.createDiagonals()
+        return child
 
 
 if __name__ == "__main__":
