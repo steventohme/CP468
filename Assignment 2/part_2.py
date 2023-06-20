@@ -18,18 +18,19 @@ class Board:
         ----------
             N (int): The size of the board
             board (list[list[int]]): The board itself, a 2D array of integers
+            queenPlacement (list[int]): A list of the row index of each queen
             leftDiagonals (list[list[int]]): A list of all the diagonals on the board, going from top left to bottom right
             rightDiagonals (list[list[int]]): A list of all the diagonals on the board, going from top right to bottom left
         """
         self.N = N
+        self.queenPlacement = [0 for _ in range(N)]
         self.board = [[0 for _ in range(N)] for _ in range(N)]
         if chromosome:
             # this will ensure that there are no collisions vetically, 
             # therefore no need to check for vertical collisions
-            queenPlacement = [random.randint(0, N - 1) for _ in range(N)]
+            self.queenPlacement = [random.randint(0, N - 1) for _ in range(N)]
             for i in range(N):
-                self.board[queenPlacement[i]][i] = 1
-        
+                self.board[self.queenPlacement[i]][i] = 1
         self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
             
 
