@@ -108,14 +108,14 @@ class Board:
 
 
 
-    def crossOver(self, other: 'Board', alpha: float) -> 'Board':
+    def crossover(self, other: 'Board', crossoverRate: float) -> 'Board':
         """
         Performs a cross over between two boards
 
         Parameters:
         ----------
             other (Board): The other board to cross over with
-            alpha (float): The crossover rate
+            crossoverRate (float): The crossover rate
 
         Returns:
         ----------
@@ -123,7 +123,7 @@ class Board:
         """
         child = Board(self.N, False)
         for i in range(self.N):
-            if random() < alpha:
+            if random() < crossoverRate:
                 child.queenPlacement[i] = self.queenPlacement[i]
             else:
                 child.queenPlacement[i] = other.queenPlacement[i]
@@ -131,6 +131,21 @@ class Board:
         child.board = child.createBoard()
         child.leftDiagonals, child.rightDiagonals = child.createDiagonals()
         return child
+    
+    def mutate(self, mutationRate: float) -> None:
+        """
+        Mutates the board
+
+        Parameters:
+        ----------
+            mutationRate (float): The mutation rate
+        """
+        if random() < mutationRate:
+            self.queenPlacement[randint(0, self.N - 1)] = randint(0, self.N - 1)
+            self.board = self.createBoard()
+            self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
+
+
 
 
 if __name__ == "__main__":
