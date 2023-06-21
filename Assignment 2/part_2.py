@@ -52,6 +52,20 @@ class Board:
                     string += "⬜"
             string += "\n"
         return string
+
+    def __gt__(self, other: 'Board') -> bool:
+        """
+        Returns whether or not the current board is better than the other board
+
+        Parameters:
+        ----------
+            other (Board): The other board to compare with
+        
+        Returns:
+        ----------
+            (bool): Whether or not the current board is better than the other board
+        """
+        return self.fitness() > other.fitness()
     
     def createBoard(self) -> list[list[int]]:
         """
@@ -148,7 +162,63 @@ class Board:
             self.board = self.createBoard()
             self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
 
+def pickRandomParent(population: list[Board], topPercent: float) -> Board:
+    """
+    Picks a random parent from the population
 
+    Parameters:
+    ----------
+        population (list[Board]): The population of boards, sorted by fitness
+        topPercent (float): The percentage of the population that is considered the best
+    
+    Returns:
+    ----------
+        parent (Board): The parent board
+    """
+    selectionPopulation = population[:int(len(population) * topPercent)]
+    index = randint(0, len(selectionPopulation) - 1)
+    return selectionPopulation[index]
+
+
+def genetic(population: list[Board], topPercent: float, crossoverRate: float, mutationRate: float) -> list[Board]:
+    """
+    Performs the genetic algorithm on the population
+
+    Parameters:
+    ----------
+        population (list[Board]): The population of boards
+        topPercent (float): The percentage of the population that is considered the best
+        crossoverRate (float): The crossover rate
+        mutationRate (float): The mutation rate
+    
+    Returns:
+    ----------
+        newPopulation (list[Board]): The population of boards after the genetic algorithm is performed
+    """ 
+    sortedProbabilities = []
+    newPopulation = []
+    for board in population:
+        sortedProbabilities.append(board)
+    
+    sortedProbabilities.sort(reverse=True)
+
+    for i in range(len(sortedProbabilities)):
+        parent1 = pickRandomParent(sortedProbabilities, topPercent)
+        parent2 = pickRandomParent(sortedProbabilities, topPercent)
+
+        child1, child2 = parent1.crossover(parent2)
+
+        child1.mutate(mutationRate)
+        child2.mutate(mutationRate)
+
+        newPopulation.append(child1)
+        newPopulation.append(child2)
+        if child1.fitness() == child1.N * (child1.N - 1)/2 or child2.fitness()  == child2.N * (child2.N - 1)/2:
+            break
+    
+    return newPopulation
+    
+    
 
 
 if __name__ == "__main__":
@@ -158,5 +228,4 @@ if __name__ == "__main__":
         print("The size of the board must be greater than 3")
         N = int(input("Enter the size of the board (must be greater than 3): "))
     population = [Board(N, True) for _ in range(POPULATION_SIZE)]
-    print(population[0])
-    print(population[0].fitness())
+    population.sort(reverse=True)
