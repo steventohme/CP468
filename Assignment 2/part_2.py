@@ -206,13 +206,13 @@ def genetic(population: list[Board], topPercent: float, crossoverRate: float, mu
         newPopulation (list[Board]): The population of boards after the genetic algorithm is performed
     """ 
     sortedProbabilities = []
-    newPopulation = []
+    newPopulation = {}
     for board in population:
         sortedProbabilities.append(board)
     
     sortedProbabilities.sort(reverse=True)
 
-    for i in range(len(sortedProbabilities)):
+    for _ in range(len(sortedProbabilities)):
         parent1 = pickRandomParent(sortedProbabilities, topPercent)
         parent2 = pickRandomParent(sortedProbabilities, topPercent)
 
@@ -221,8 +221,8 @@ def genetic(population: list[Board], topPercent: float, crossoverRate: float, mu
         child1.mutate(mutationRate)
         child2.mutate(mutationRate)
 
-        newPopulation.append(child1)
-        newPopulation.append(child2)
+        newPopulation[child1] = 1
+        newPopulation[child2] = 1
         if child1.fitness() == child1.N * (child1.N - 1)/2 or child2.fitness()  == child2.N * (child2.N - 1)/2:
             break
     
