@@ -104,7 +104,8 @@ class Board:
         # we must use the comb function to figure out how many pairs of queens are colliding
         horizontalCollisions = sum(comb(row.count(1),2) for row in self.board)
         diagonalCollisions = sum(comb(diagonal.count(1),2) for diagonal in self.rightDiagonals) + sum(comb(diagonal.count(1),2) for diagonal in self.leftDiagonals)
-        return int(maxFitness - (horizontalCollisions + diagonalCollisions)), horizontalCollisions, diagonalCollisions
+        return int(maxFitness - (horizontalCollisions + diagonalCollisions))
+
 
 
     def crossOver(self, other: 'Board', alpha: float) -> 'Board':
