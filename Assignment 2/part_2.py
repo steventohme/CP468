@@ -108,7 +108,7 @@ class Board:
 
 
 
-    def crossover(self, other: 'Board', crossoverRate: float) -> 'Board':
+    def crossover(self, other: 'Board', crossoverRate: float) -> tuple('Board', 'Board'):
         """
         Performs a cross over between two boards
 
@@ -119,18 +119,21 @@ class Board:
 
         Returns:
         ----------
-            child (Board): The child board
+            child1 (Board): First child board
+            child2 (Board): Second child board
+
         """
-        child = Board(self.N, False)
-        for i in range(self.N):
-            if random() < crossoverRate:
-                child.queenPlacement[i] = self.queenPlacement[i]
-            else:
-                child.queenPlacement[i] = other.queenPlacement[i]
+        child1, child2 = self, other
+        if random() < crossoverRate:
+            crossoverPoint = randint(1, self.N - 1)
+            child1.queenPlacement = self.queenPlacement[:crossoverPoint] + other.queenPlacement[crossoverPoint:]
+            child2.queenPlacement = other.queenPlacement[:crossoverPoint] + self.queenPlacement[crossoverPoint:]
+            child1.board = child1.createBoard()
+            child2.board = child2.createBoard()
+            child1.leftDiagonals, child1.rightDiagonals = child1.createDiagonals()
+            child2.leftDiagonals, child2.rightDiagonals = child2.createDiagonals()
         
-        child.board = child.createBoard()
-        child.leftDiagonals, child.rightDiagonals = child.createDiagonals()
-        return child
+        return child1, child2
     
     def mutate(self, mutationRate: float) -> None:
         """
