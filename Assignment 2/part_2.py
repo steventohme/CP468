@@ -108,7 +108,7 @@ class Board:
 
 
 
-    def crossover(self, other: 'Board', crossoverRate: float) -> tuple('Board', 'Board'):
+    def crossover(self, other: 'Board', crossoverRate: float) -> 'Board':
         """
         Performs a cross over between two boards
 
