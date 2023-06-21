@@ -67,6 +67,16 @@ class Board:
         """
         return self.fitness() > other.fitness()
     
+    def __hash__(self) -> int:
+        """
+        Returns the hash of the board
+
+        Returns:
+        ----------
+            hash (int): The hash of the board
+        """
+        return hash(tuple(self.queenPlacement))
+    
     def createBoard(self) -> list[list[int]]:
         """
         Creates a board based off of the queenPlacement list
@@ -227,5 +237,5 @@ if __name__ == "__main__":
     while N < 4:
         print("The size of the board must be greater than 3")
         N = int(input("Enter the size of the board (must be greater than 3): "))
-    population = [Board(N, True) for _ in range(POPULATION_SIZE)]
+    population = {Board(N, True): 1 for _ in range(POPULATION_SIZE)}
     population.sort(reverse=True)
