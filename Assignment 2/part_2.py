@@ -66,6 +66,20 @@ class Board:
             (bool): Whether or not the current board is better than the other board
         """
         return self.fitness() > other.fitness()
+
+    def __lt__(self, other: 'Board') -> bool:
+        """
+        Returns whether or not the current board is worse than the other board
+
+        Parameters:
+        ----------
+            other (Board): The other board to compare with
+        
+        Returns:
+        ----------
+            (bool): Whether or not the current board is worse than the other board
+        """
+        return self.fitness() < other.fitness()
     
     def __hash__(self) -> int:
         """
@@ -92,7 +106,8 @@ class Board:
     
     def createDiagonals(self) -> list[list[int]]:
         """
-        Creates a list of all the diagonals on the board
+        Creates a list of all the diagonals on the board, this is only used for
+        calculating the amount of diagonal collisions
 
         Returns:
         ----------
@@ -206,12 +221,14 @@ def genetic(population: list[Board], topPercent: float, crossoverRate: float, mu
     
     sortedPopulation.sort(reverse=True)
 
-    newPopulation = [sortedPopulation[0], sortedPopulation[-1]]
+    newPopulation = []
 
-    for _ in range((len(population) - 2)//2):
+    for _ in range((len(population))//2):
+        # pick two parents from the topPercent% of the population
         parent1 = pickRandomParent(sortedPopulation, topPercent)
         parent2 = pickRandomParent(sortedPopulation, topPercent)
         
+        # if the children aren't changed we just add the parents back to the population
         child1, child2 = parent1, parent2
         if random() < crossoverRate:
             child1, child2 = parent1.crossover(parent2)
@@ -225,13 +242,11 @@ def genetic(population: list[Board], topPercent: float, crossoverRate: float, mu
         newPopulation.append(child1)
         newPopulation.append(child2)
 
+        
         if child1 and child2 and (child1.fitness() == child1.N * (child1.N - 1)/2 or child2.fitness() == child2.N * (child2.N - 1)/2):
             break
 
     return newPopulation
-    
-    
-
 
 if __name__ == "__main__":
     POPULATION_SIZE = 500
@@ -242,26 +257,32 @@ if __name__ == "__main__":
 
     population = [Board(N, True) for _ in range(POPULATION_SIZE)]
     maxFitness = (N * (N - 1))/2
-    topPercent = 0.25
+
+    topPercent = 0.2
     crossoverRate = 0.5
-    mutationRate = 0.1
+    mutationRate = 0.4
+
     generation = 0
 
     while True:
-        print(f"Generation {generation}")
+        if generation % 50 == 0:
+            print(f"Generation {generation}")
         population = genetic(population, topPercent, crossoverRate, mutationRate)
         generation += 1
+
+        # check if we have found a solution
         for board in population:
             if board.fitness() == maxFitness:
                 print(board)
                 print(f"Solution found in generation {generation}")
-                exit()
-        
+                break
+    
+        # if we have reached X generations, then we have not found a solution
         if generation == 1000:
             print("No solution found")
             print(f"Best board: \n{population[0]}")
             break
-
+        
 
 
 
