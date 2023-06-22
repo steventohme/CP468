@@ -123,16 +123,14 @@ class Board:
         ----------
             fitness (int): The fitness of the board
         """
-        maxFitness = (self.N * (self.N - 1)/2)
+        maxFitness = self.N * (self.N - 1)/2
 
         # we must use the comb function to figure out how many pairs of queens are colliding
         horizontalCollisions = sum(comb(row.count(1),2) for row in self.board)
         diagonalCollisions = sum(comb(diagonal.count(1),2) for diagonal in self.rightDiagonals) + sum(comb(diagonal.count(1),2) for diagonal in self.leftDiagonals)
         return int(maxFitness - (horizontalCollisions + diagonalCollisions))
 
-
-
-    def crossover(self, other: 'Board', crossoverRate: float) -> 'Board':
+    def crossover(self, other: 'Board') -> 'Board':
         """
         Performs a cross over between two boards
 
@@ -148,18 +146,16 @@ class Board:
 
         """
         child1, child2 = self, other
-        if random() < crossoverRate:
-            crossoverPoint = randint(1, self.N - 1)
-            child1.queenPlacement = self.queenPlacement[:crossoverPoint] + other.queenPlacement[crossoverPoint:]
-            child2.queenPlacement = other.queenPlacement[:crossoverPoint] + self.queenPlacement[crossoverPoint:]
-            child1.board = child1.createBoard()
-            child2.board = child2.createBoard()
-            child1.leftDiagonals, child1.rightDiagonals = child1.createDiagonals()
-            child2.leftDiagonals, child2.rightDiagonals = child2.createDiagonals()
-        
+        crossoverPoint = randint(1, self.N - 1)
+        child1.queenPlacement = other.queenPlacement[crossoverPoint:] + self.queenPlacement[:crossoverPoint]
+        child2.queenPlacement =  self.queenPlacement[crossoverPoint:] + other.queenPlacement[:crossoverPoint]
+        child1.board = child1.createBoard()
+        child2.board = child2.createBoard()
+        child1.leftDiagonals, child1.rightDiagonals = child1.createDiagonals()
+        child2.leftDiagonals, child2.rightDiagonals = child2.createDiagonals()
         return child1, child2
     
-    def mutate(self, mutationRate: float) -> None:
+    def mutate(self) -> None:
         """
         Mutates the board
 
@@ -167,10 +163,9 @@ class Board:
         ----------
             mutationRate (float): The mutation rate
         """
-        if random() < mutationRate:
-            self.queenPlacement[randint(0, self.N - 1)] = randint(0, self.N - 1)
-            self.board = self.createBoard()
-            self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
+        self.queenPlacement[randint(0, self.N - 1)] = randint(0, self.N - 1)
+        self.board = self.createBoard()
+        self.leftDiagonals, self.rightDiagonals = self.createDiagonals()
 
 def pickRandomParent(population: list[Board], topPercent: float) -> Board:
     """
@@ -205,37 +200,71 @@ def genetic(population: list[Board], topPercent: float, crossoverRate: float, mu
     ----------
         newPopulation (list[Board]): The population of boards after the genetic algorithm is performed
     """ 
-    sortedProbabilities = []
-    newPopulation = {}
+    sortedPopulation = []
     for board in population:
-        sortedProbabilities.append(board)
+        sortedPopulation.append(board)
     
-    sortedProbabilities.sort(reverse=True)
+    sortedPopulation.sort(reverse=True)
 
-    for _ in range(len(sortedProbabilities)):
-        parent1 = pickRandomParent(sortedProbabilities, topPercent)
-        parent2 = pickRandomParent(sortedProbabilities, topPercent)
+    newPopulation = [sortedPopulation[0], sortedPopulation[-1]]
 
-        child1, child2 = parent1.crossover(parent2)
+    for _ in range((len(population) - 2)//2):
+        parent1 = pickRandomParent(sortedPopulation, topPercent)
+        parent2 = pickRandomParent(sortedPopulation, topPercent)
+        
+        child1, child2 = parent1, parent2
+        if random() < crossoverRate:
+            child1, child2 = parent1.crossover(parent2)
 
-        child1.mutate(mutationRate)
-        child2.mutate(mutationRate)
+        if random() < mutationRate and child1:
+            child1.mutate()
+        
+        if random() < mutationRate and child2:
+            child2.mutate()
+        
+        newPopulation.append(child1)
+        newPopulation.append(child2)
 
-        newPopulation[child1] = 1
-        newPopulation[child2] = 1
-        if child1.fitness() == child1.N * (child1.N - 1)/2 or child2.fitness()  == child2.N * (child2.N - 1)/2:
+        if child1 and child2 and (child1.fitness() == child1.N * (child1.N - 1)/2 or child2.fitness() == child2.N * (child2.N - 1)/2):
             break
-    
+
     return newPopulation
     
     
 
 
 if __name__ == "__main__":
-    POPULATION_SIZE = 100
+    POPULATION_SIZE = 500
     N = int(input("Enter the size of the board: "))
     while N < 4:
         print("The size of the board must be greater than 3")
         N = int(input("Enter the size of the board (must be greater than 3): "))
-    population = {Board(N, True): 1 for _ in range(POPULATION_SIZE)}
-    population.sort(reverse=True)
+
+    population = [Board(N, True) for _ in range(POPULATION_SIZE)]
+    maxFitness = (N * (N - 1))/2
+    topPercent = 0.25
+    crossoverRate = 0.5
+    mutationRate = 0.1
+    generation = 0
+
+    while True:
+        print(f"Generation {generation}")
+        population = genetic(population, topPercent, crossoverRate, mutationRate)
+        generation += 1
+        for board in population:
+            if board.fitness() == maxFitness:
+                print(board)
+                print(f"Solution found in generation {generation}")
+                exit()
+        
+        if generation == 1000:
+            print("No solution found")
+            print(f"Best board: \n{population[0]}")
+            break
+
+
+
+
+
+
+
