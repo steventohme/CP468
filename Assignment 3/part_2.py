@@ -1,3 +1,6 @@
+# Author: Steven Tohme
+# Class: CP468 - Artificial Intelligence
+
 import pandas as pd
 
 class Point:
@@ -37,9 +40,10 @@ class kMeans:
     A class to represent a k-means clustering algorithm
 
     """
-    def __init__(self, k, data):
+    def __init__(self, k: int, X_data: pd.Series, Y_data: pd.Series) -> None:
         self.k = k
-        self.data = data
+        self.data = self.createData(X_data, Y_data)
+        self.centroids = []
     
     def createData(self, X_data: pd.Series, Y_data: pd.Series) -> list[Point]:
         """
