@@ -1,3 +1,5 @@
+import pandas as pd
+
 class Point:
     """
     A class to represent a point in 2D space
@@ -31,7 +33,27 @@ class Point:
         return ((self.x - other.x)**2 + (self.y - other.y)**2)**0.5
 
 class kMeans:
+    """
+    A class to represent a k-means clustering algorithm
+
+    """
     def __init__(self, k, data):
         self.k = k
         self.data = data
     
+    def createData(self, X_data: pd.Series, Y_data: pd.Series) -> list[Point]:
+        """
+        Creates a list of points from the data passed to the class
+
+        Parameters:
+        ----------
+            data (pandas Dataframe): The data to be converted to a list of points
+
+        Returns:
+        ----------
+            list[point]: A list of points
+        """
+        points = []
+        for i in range(len(X_data)):
+            points.append(Point(X_data[i], Y_data[i]))
+        return points
