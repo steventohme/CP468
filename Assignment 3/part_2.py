@@ -2,6 +2,7 @@
 # Class: CP468 - Artificial Intelligence
 
 import pandas as pd
+from random import randint
 
 class Point:
     """
@@ -61,3 +62,13 @@ class kMeans:
         for i in range(len(X_data)):
             points.append(Point(X_data[i], Y_data[i]))
         return points
+    
+    def initializeCentroids(self) -> None:
+        """
+        Initializes the centroids of the k-means algorithm
+        """
+        centroids = []
+        for _ in range(self.k):
+            centroids.append(self.data[randint(0, len(self.data) - 1)])
+        
+        self.centroids = centroids
