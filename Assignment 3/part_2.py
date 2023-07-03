@@ -45,6 +45,7 @@ class kMeans:
         self.k = k
         self.data = self.createData(X_data, Y_data)
         self.centroids = []
+        self.assignedData = {}
     
     def createData(self, X_data: pd.Series, Y_data: pd.Series) -> list[Point]:
         """
@@ -72,3 +73,33 @@ class kMeans:
             centroids.append(self.data[randint(0, len(self.data) - 1)])
         
         self.centroids = centroids
+    
+    def assignCentroids(self) -> None:
+        """
+        Assigns current data points to the closest centroid according to euclidian distance
+        """
+        assignedData = {}
+        for centroid in self.centroids:
+            assignedData[centroid] = []
+        
+        for point in self.data:
+            distanceMin = point.calcDistance(self.centroids[0])
+            centroidMin = self.centroids[0]
+            for centroid in self.centroids[1:]:
+                distance = point.calcDistance(centroid)
+                if distance < distanceMin:
+                    distanceMin = distance
+                    centroidMin = centroid
+            
+            assignedData[centroidMin].append(point)
+
+        self.assignedData = assignedData
+
+
+
+
+if __name__ == "__main__":
+    data = pd.read_csv("Assignment 3/kmeans.csv")
+    k = 3
+    kmeans = kMeans(k, data['f1'], data['f2'])
+    kmeans.initializeCentroids()
