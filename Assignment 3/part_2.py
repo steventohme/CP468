@@ -86,7 +86,7 @@ class kMeans:
     
     def assignCentroids(self) -> None:
         """
-        Assigns current data points to the closest centroid according to euclidian distance
+        Assigns current data points to the closest centroid according to Euclidian distance
         """
         assignedData = {}
         for centroid in self.centroids:
@@ -104,6 +104,25 @@ class kMeans:
             assignedData[centroidMin].append(point)
 
         self.assignedData = assignedData
+    
+    def adjustCentroids(self) -> None:
+        """
+        Change centroids to be average of values of points contained within it
+        """
+        newCentroids = []
+        for centroid in self.assignedData:
+            count = 0
+            xSum = 0
+            ySum = 0
+            for point in self.assignedData[centroid]:
+                count += 1
+                xSum += point.x
+                ySum += point.y
+            
+            newCentroid = Point(xSum/count, ySum/count)
+            newCentroids.append(newCentroid)
+        
+        self.centroids = newCentroids
 
 
 
@@ -114,5 +133,3 @@ if __name__ == "__main__":
     kmeans = kMeans(k, data['f1'], data['f2'])
     kmeans.initializeCentroids()
     kmeans.assignCentroids()
-    for point in kmeans.assignedData:
-        print(point)
