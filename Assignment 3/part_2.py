@@ -36,6 +36,16 @@ class Point:
         """
         return ((self.x - other.x)**2 + (self.y - other.y)**2)**0.5
 
+    def __str__(self) -> str:
+        """
+        Returns string representation of point object
+
+        Returns:
+        ---------
+            str: string representation of point object
+        """
+        return f"[X: {self.x}, Y: {self.y}]"
+
 class kMeans:
     """
     A class to represent a k-means clustering algorithm
@@ -103,3 +113,6 @@ if __name__ == "__main__":
     k = 3
     kmeans = kMeans(k, data['f1'], data['f2'])
     kmeans.initializeCentroids()
+    kmeans.assignCentroids()
+    for point in kmeans.assignedData:
+        print(point)
