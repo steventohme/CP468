@@ -104,7 +104,6 @@ class kMeans:
             centroids.append(self.data[randint(0, len(self.data) - 1)])
         
         self.centroids = centroids
-        return centroids
     
     def assignCentroids(self) -> None:
         """
@@ -126,7 +125,6 @@ class kMeans:
             assignedData[centroidMin].append(point)
 
         self.assignedData = assignedData
-        return assignedData
     
     def adjustCentroids(self) -> None:
         """
@@ -146,7 +144,6 @@ class kMeans:
             newCentroids.append(newCentroid)
         
         self.centroids = newCentroids
-        return newCentroids
 
 def kMeansAlgorithm(k: int, X_data: pd.Series, Y_data: pd.Series) -> dict:
     """
