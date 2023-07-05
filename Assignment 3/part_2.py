@@ -45,6 +45,27 @@ class Point:
             str: string representation of point object
         """
         return f"[X: {self.x}, Y: {self.y}]"
+    
+    def __eq__(self, __value: object) -> bool:
+        """
+        Returns whether a point is equal to another point
+
+        Returns:
+        ---------
+            bool: equal or not equal
+        """
+        return self.x == __value.x and self.y == __value.y
+    
+    def __hash__(self):
+        """
+        Computes the hash value for the point object based on its coordinates.
+
+        Returns:
+        ---------
+            int: Hash value for the point object
+        """
+        return hash(str(self.x) + str(self.y))
+    
 
 class kMeans:
     """
@@ -83,6 +104,7 @@ class kMeans:
             centroids.append(self.data[randint(0, len(self.data) - 1)])
         
         self.centroids = centroids
+        return centroids
     
     def assignCentroids(self) -> None:
         """
@@ -104,6 +126,7 @@ class kMeans:
             assignedData[centroidMin].append(point)
 
         self.assignedData = assignedData
+        return assignedData
     
     def adjustCentroids(self) -> None:
         """
@@ -123,13 +146,41 @@ class kMeans:
             newCentroids.append(newCentroid)
         
         self.centroids = newCentroids
+        return newCentroids
 
+def kMeansAlgorithm(k: int, X_data: pd.Series, Y_data: pd.Series) -> dict:
+    """
+    Runs K Means Clustering Algorithm
+
+    Parameters:
+    ----------
+        k (int): K-value, amount of centroids in our algorithm
+        X_data (pd.Series): Horizontal values of data points
+        Y_data (pd.Series): Vertical values of data points
+    
+    Returns:
+    ---------
+        assignedData (dict): 
+    """
+    f = open("text.txt", "w")
+    worker = kMeans(k, X_data, Y_data)
+    worker.initializeCentroids()
+    iterationCount = 0
+    while True:
+        iterationCount += 1
+        print(f"Iteration: {iterationCount}")
+        prev = worker.centroids
+        worker.assignCentroids()
+        worker.adjustCentroids()
+        if prev == worker.centroids:
+            break
+        prev = worker.centroids
+    
+    return worker.assignedData
 
 
 
 if __name__ == "__main__":
     data = pd.read_csv("Assignment 3/kmeans.csv")
     k = 3
-    kmeans = kMeans(k, data['f1'], data['f2'])
-    kmeans.initializeCentroids()
-    kmeans.assignCentroids()
+    print(kMeansAlgorithm(k, data['f1'], data['f2']))
