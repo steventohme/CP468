@@ -159,25 +159,17 @@ def kMeansAlgorithm(k: int, X_data: pd.Series, Y_data: pd.Series) -> dict:
     ---------
         assignedData (dict): 
     """
-    f = open("text.txt", "w")
     worker = kMeans(k, X_data, Y_data)
     worker.initializeCentroids()
     iterationCount = 0
     while True:
         iterationCount += 1
-        print(f"Iteration: {iterationCount}")
         prev = worker.centroids
         worker.assignCentroids()
         worker.adjustCentroids()
         if prev == worker.centroids:
+            worker.assignCentroids()
             break
         prev = worker.centroids
     
     return worker.assignedData
-
-
-
-if __name__ == "__main__":
-    data = pd.read_csv("Assignment 3/kmeans.csv")
-    k = 3
-    print(kMeansAlgorithm(k, data['f1'], data['f2']))
